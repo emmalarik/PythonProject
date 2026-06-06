@@ -1,0 +1,6 @@
+subject_id,block_number,trial_in_block,block_type,global_trial,machine_left_id,machine_right_id,machine_left_EV,machine_right_EV,machine_left_novelty,machine_right_novelty,machine_left_exposure_count,machine_right_exposure_count,pair_type,choice_made,chosen_machine_id,RT,outcome,score_total
+3,0,1,practice,1,szesciokat_kropki_zielony,gwiazda_paski_pionowe_czerwony,0.8,0.2,1,1,0,0,standard,timeout,,,0,0
+3,0,2,practice,2,szesciokat_kropki_zielony,gwiazda_paski_pionowe_czerwony,0.8,0.2,1,1,1,1,standard,timeout,,,0,0
+3,0,3,practice,3,szesciokat_kropki_zielony,gwiazda_paski_pionowe_czerwony,0.8,0.2,1,1,2,2,standard,timeout,,,0,0
+3,0,4,practice,4,szesciokat_kropki_zielony,gwiazda_paski_pionowe_czerwony,0.8,0.2,1,1,3,3,standard,timeout,,,0,0
+3,0,5,practice,5,szesciokat_kropki_zielony,gwiazda_paski_pionowe_czerwony,0.8,0.2,1,1,4,4,standard,timeout,,,0,0
