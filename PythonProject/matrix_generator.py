@@ -69,19 +69,20 @@ def setup_block_machines(block_number, global_pool, ev_vector=DEFAULT_EV):
     if block_number == 1:
         # blok 1: 5 maszyn całkowicie nowych
         block_machines = unused_machines[:5]
-
     else:
-        selected_known = random.sample(used_machines, 4)
+        # bloki 2-20: mają podział na initial i holdout
+        # pobieram 3 znane maszyny z dotychczasowej historii badania
+        selected_known = random.sample(used_machines, 3)
+        initial_known = selected_known[:2]  # 2 do zestawu początkowego
+        holdout_known = selected_known[2]  # 1 do zestawu wstrzymanego
 
-        initial_known = selected_known[:3]  # indexes 0, 1, 2 -> initial set
-        holdout_known = selected_known[3]  # index 4 -> second holdout machine
+        # pobieram 2 nowe maszyny z puli nigdy nieużywanych
+        initial_new = unused_machines[0]
+        holdout_new = unused_machines[1]
 
-        holdout_new = unused_machines[0]  # index 3 -> first holdout machine
-
-        # Final order matters because generate_block_sequence_candidate()
-        # adds block_machines[3] at holdout1_trigger
-        # and block_machines[4] at holdout2_trigger.
-        block_machines = initial_known + [holdout_new, holdout_known]
+        # indeksy 0, 1, 2 -> Initial Set (2 znane, 1 nowa)
+        # indeksy 3, 4 -> Holdout Set (1 znana, 1 nowa)
+        block_machines = initial_known + [initial_new] + [holdout_new, holdout_known]
 
     # przypisanie lokalnych parametrów EV do wybranych 5 maszyn z bloku
     for index, machine in enumerate(block_machines):
@@ -96,10 +97,6 @@ def setup_block_machines(block_number, global_pool, ev_vector=DEFAULT_EV):
                 machine['set_type'] = 'initial'
             else:
                 machine['set_type'] = 'holdout'
-
-        # Odnotowujemy w historii maszyny, że bierze udział w tym bloku
-        if block_number not in machine['used_in_blocks']:
-            machine['used_in_blocks'].append(block_number)
 
     return block_machines
 
@@ -219,6 +216,10 @@ def get_valid_block_matrix(block_number, block_machines, global_pool, config):
 
         if attempts > 5000:
             raise RuntimeError(f"Algorytm nie mógł wygenerować poprawnego bloku {block_number} po 5000 prób.")
+
+    for machine in block_machines:
+        if block_number not in machine['used_in_blocks']:
+            machine['used_in_blocks'].append(block_number)
 
     for trial in valid_matrix:
         # maszyny przypisane do trial to referencje do obiektów w pamięci
